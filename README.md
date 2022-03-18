@@ -1,1 +1,1 @@
-# JSfetchAPI
+# JS fetchAPI
