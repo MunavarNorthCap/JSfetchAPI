@@ -1,94 +1,45 @@
-console.log("Table API");
+var rowData = [];
 
-// let id = 0;
-var baseURL = 'https://reqres.in/api/users';
-var rawData = [];
+var url = 'https://reqres.in/api/users';    // ?page=2
 
-fetch(`${baseURL}?page=2`)
+fetch(url)
     .then((response) => {
-        // console.log(response)
+        // console.log(response);
         if(!response.ok) {
             throw Error("ERROR");
         }
         return response.json();
     })
     .then((result) => {
+        // console.log(result);
         // console.log(result.data);
         var data = result.data;
         getDetail(data);
 
         // lets globalize data with an array
-        rawData = data;
+        rowData = data;
     })
-    .catch(function(err) {
-        console.log('error: ' + err);
+    .catch(error => {
+        console.log(error);
     });
-    
-function getDetail(data) {
-    // console.log(data);
-    // var detail = document.getElementById("detail");
 
-    // for(let x of data) {
-    // // console.log(x);
-    // var tRow = document.createElement('tr');
-    //     tRow.innerHTML += `
-    //         <th onclick="visibile(${x.id})"> ${x.id} </th> 
-    //         <td>${x.first_name}</td>
-    //         <td>${x.email}</td>            
-    //         `
-    //     detail.appendChild(tRow);
-    // }
+function getDetail(dat) {
+    var detail = document.getElementById('detail');
 
-    var leftData = document.getElementById('leftData').innerHTML;
-    var renders = Mustache.render(leftData, { table : data });
+    for(var i = 0; i < dat.length; i++) {
+        var tRow = document.createElement('tr');
 
-    document.getElementById('detail').innerHTML = renders;
+        tRow.innerHTML = `<th onclick="visibile(${dat[i].id})">${dat[i].id}</th>
+                    <td>${dat[i].first_name}</td>
+                    <td>${dat[i].last_name}</td>
+                    <td>${dat[i].email_name}</td>
+                    <td><img src="${dat[i].avatar}" alt="image" /></td>
+                `
+            // return detail.appendChild(tRow);     // display 1 item only
+            detail.appendChild(tRow);               // Multi data displayed
+    }
 }
 
-function visibile(id) {
-    // console.log(id)
-
-    fetch(`${baseURL}/${id}`)
-        .then((response) => response.json())
-        .then((result) => {
-            // console.log(result.data);
-            var userDetail= result.data;
-            // document.getElementById("inDetail").innerHTML = `<div class="content">
-            //   ${userDetail.id} - ${userDetail.first_name} - ${userDetail.last_name} - ${userDetail.email} - <img src='${userDetail.avatar}' alt='avatar.image' />
-            // </div>`;
-
-        var template = document.getElementById('template').innerHTML;
-        var rendered = Mustache.render(template, { list: userDetail });
-
-        document.getElementById('inDetail').innerHTML = rendered;
-    })
-    .catch(function(err) {
-        console.log('error: ' + err);
-    });
-
-    // for (let x of rawData) {
-    //   console.log(x);
-    //   document.getElementById("inDetail").innerHTML += `<div class="content">
-    //       ${x.id} - ${x.first_name} - ${x.last_name} - ${x.email} - <img src='${x.avatar}' alt='avatar.image' />
-    //     </div>`;
-    // }
-
-    // for(let i = 0; i < rawData.length; i++) {
-    //     // console.log(rawData);
-    //     var tData = rawData[i];
-    //     // console.log(tData);
-    //     if(tData.id == id) {            
-    //         document.getElementById('inDetail').innerHTML = `
-    //         <div class="content d-flex">
-    //         <div class="col-4 m-5">
-    //             <img src='${tData.avatar}' alt='avatar.image' />
-    //         </div>
-    //         <div class="col-4 m-5">
-    //             <i class="fa-solid fa-user"></i> Name: ${tData.first_name} ${tData.last_name} <br /> 
-    //             <i class="fa-solid fa-envelope"></i> Email: ${tData.email}
-    //         </div>
-    //         </div>`;
-    //     }
-    // }
-
+function visibile(ids) {
+    console.log('click', rowData.find(item => item.id == ids))
 }
